@@ -1,0 +1,74 @@
+# Frontend–Backend API Contract
+
+This document explains how the frontend and backend should work together.
+
+---
+
+## Overview
+
+- **Backend’s job**: Collect job listings, run verification, and expose them through API endpoints.  
+- **Frontend’s job**: Call those endpoints, show the results, and let users search/filter jobs.  
+
+The frontend does not do verification. It only shows what backend provides.
+
+---
+
+## API Endpoints Needed
+
+### 1. Get all jobs
+
+
+**Response (JSON array):**
+```json
+[
+  {
+    "id": "uuid",
+    "title": "Frontend Developer",
+    "company": "Orbit Labs",
+    "location": "San Diego, CA",
+    "type": "Full Time",
+    "salary": "$95k–$120k",
+    "posted_at": "2025-10-18T12:05:00Z",
+    "verdict": "Certified"
+  }
+]
+
+2. Search/filter jobs
+GET /api/jobs?q=react&location=remote&certified=true&sort=recent
+
+Query params:
+
+q → keyword (title, company, etc.)
+
+location → filter by city or “remote”
+
+certified → true/false
+
+sort → “recent” or “score”
+
+Frontend Notes
+
+Until backend is ready, frontend uses demo jobs (hardcoded).
+
+Later, frontend just replaces demo with real fetch:
+
+fetch("http://localhost:5000/api/jobs")
+  .then(res => res.json())
+  .then(setJobs);
+
+  Backend Notes
+
+Must expose /api/jobs.
+
+Must return JSON in the structure shown above.
+
+Handles all verification, scraping, or posting logic.
+
+
+Workflow
+
+Backend collects/verifies job data.
+
+Backend exposes jobs via /api/jobs.
+
+Frontend fetches jobs and displays them with filters/search.
