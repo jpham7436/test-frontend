@@ -1,23 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
 
-function Sidebar({ type = 'left' }) {
-  if (type === 'left') {
-    return (
-      <aside className="sidebar sidebar-left">
-        <div className="sidebar-card">
-          <h3 className="sidebar-title">Why JobHunting?</h3>
-          <ul className="sidebar-list">
-            <li>✓ Verified job postings</li>
-            <li>✓ No fake listings</li>
-            <li>✓ Direct company links</li>
-            <li>✓ Real-time updates</li>
-          </ul>
-        </div>
-      </aside>
-    );
-  }
-
+function Sidebar() {
   return (
     <aside className="sidebar sidebar-right">
       <div className="sidebar-card">
@@ -30,12 +14,23 @@ function Sidebar({ type = 'left' }) {
           <li>DevWorks</li>
         </ul>
       </div>
-      
+
       <div className="sidebar-card">
         <h3 className="sidebar-title">Pro Tips</h3>
         <p className="sidebar-text">
           Customize your resume for each position. Highlight achievements with specific metrics and results.
         </p>
+      </div>
+
+      {/* "Why JobHunting" under "Pro Tips" */}
+      <div className="sidebar-card">
+        <h3 className="sidebar-title">Why JobHunting?</h3>
+        <ul className="sidebar-list">
+          <li>✓ Verified job postings</li>
+          <li>✓ No fake listings</li>
+          <li>✓ Direct company links</li>
+          <li>✓ Real-time updates</li>
+        </ul>
       </div>
     </aside>
   );
