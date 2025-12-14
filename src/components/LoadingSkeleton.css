@@ -1,0 +1,68 @@
+.skeleton-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.05);
+}
+
+.skeleton-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* SHIMMER ELEMENTS */
+.skeleton-logo,
+.skeleton-title,
+.skeleton-date,
+.skeleton-meta,
+.skeleton-badge {
+  background: linear-gradient(
+    90deg,
+    #f1f5f9 25%,
+    rgba(5, 150, 105, 0.18) 50%,
+    #f1f5f9 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.4s infinite ease-in-out;
+  border-radius: 10px;
+}
+
+.skeleton-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.skeleton-title {
+  height: 22px;
+  flex: 1;
+}
+
+.skeleton-date {
+  height: 14px;
+  width: 80px;
+}
+
+.skeleton-meta {
+  height: 14px;
+  width: 60%;
+  margin-bottom: 12px;
+}
+
+.skeleton-badge {
+  height: 22px;
+  width: 120px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

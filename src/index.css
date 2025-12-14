@@ -1,13 +1,92 @@
-body {
+/* RESET */
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* =========================
+   THEME VARIABLES
+   ========================= */
+
+/* Light mode (default) */
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --text: #0f172a;
+  --muted: #64748b;
+
+  --primary: #059669;
+  --primary-2: #047857;
+
+  --shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --bg: #0b1220;
+  --card: #0f172a;
+  --border: #1f2937;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+
+  --primary: #34d399;
+  --primary-2: #10b981;
+
+  --shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================
+   GLOBAL STYLES
+   ========================= */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Code blocks */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+/* --- Safe defaults so text never becomes white-on-white --- */
+a { color: inherit; }
+
+.navbar, .sidebar-card, .jobs-filters, .job-card, .empty-message, .error-message {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Any headings inside cards */
+.sidebar-card h1,
+.sidebar-card h2,
+.sidebar-card h3,
+.sidebar-card h4,
+.sidebar-title,
+.filters-title,
+.jobs-header h2,
+.saved-header h1 {
+  color: var(--text);
+}
+
+/* Secondary text inside cards */
+.sidebar-text,
+.sidebar-list li,
+.jobs-subtitle,
+.saved-subtitle,
+.job-card-company,
+.job-card-meta,
+.job-card-date,
+.verification-score {
+  color: var(--muted);
 }

@@ -1,0 +1,145 @@
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 200px 1fr 300px;
+  gap: 24px;
+  align-items: start;
+
+  /* IMPORTANT: force correct text color in the center area */
+  color: var(--text);
+}
+
+/* Make sure the middle column never inherits "white" accidentally */
+.home-main {
+  min-width: 0;
+  color: var(--text);
+}
+
+/* HERO */
+.home-hero {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 900;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.home-hero p {
+  font-size: 16px;
+  margin: 0;
+  opacity: 0.95;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* SECTION HEADER */
+.home-header {
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.home-header h2 {
+  font-size: 24px;
+  font-weight: 900;
+  margin: 0 0 4px 0;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.home-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* FEED */
+.jobs-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ERROR / EMPTY STATES */
+.error-message,
+.empty-message {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  color: var(--text);
+}
+
+.error-message p {
+  color: #b91c1c;
+  margin: 0;
+  font-weight: 800;
+}
+
+.empty-message p {
+  color: var(--muted);
+  margin: 0;
+  font-weight: 600;
+}
+
+/* LOAD MORE BUTTON */
+.load-more-btn {
+  width: 100%;
+  margin-top: 24px;
+  padding: 14px;
+  background: var(--primary);
+  border: 1px solid color-mix(in srgb, var(--primary) 65%, var(--border) 35%);
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.load-more-btn:hover {
+  transform: translateY(-1px);
+  background: var(--primary-2);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 1024px) {
+  .home-container {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero h1 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: 16px;
+  }
+
+  .home-hero {
+    padding: 30px 20px;
+  }
+
+  .home-hero h1 {
+    font-size: 24px;
+  }
+
+  .home-hero p {
+    font-size: 14px;
+  }
+}
