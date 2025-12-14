@@ -1,0 +1,54 @@
+.sidebar {
+  position: sticky;
+  top: 80px;
+  height: fit-content;
+}
+
+.sidebar-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  color: var(--text);
+}
+
+.sidebar-title {
+  font-size: 16px;
+  font-weight: 900;
+  margin: 0 0 12px 0;
+  color: var(--text);
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-list li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.sidebar-list li:hover {
+  color: var(--primary);
+}
+
+.sidebar-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .sidebar-left,
+  .sidebar-right {
+    display: none;
+  }
+}

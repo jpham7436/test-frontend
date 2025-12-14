@@ -1,0 +1,196 @@
+.postjob-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.postjob-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.postjob-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.postjob-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.postjob-subtitle {
+  margin: 6px 0 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.postjob-badge {
+  background: color-mix(in srgb, var(--primary) 12%, var(--card) 88%);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--border) 75%);
+  color: var(--primary);
+  font-weight: 900;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.postjob-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.postjob-section {
+  border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent 30%);
+  padding-top: 14px;
+}
+
+.postjob-section:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.postjob-sectionTitle {
+  font-weight: 1000;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.postjob-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field--full {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 800;
+  color: color-mix(in srgb, var(--text) 75%, var(--muted) 25%);
+}
+
+.req {
+  color: #ef4444;
+  font-weight: 1000;
+}
+
+.field input,
+.field select {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: color-mix(in srgb, var(--card) 75%, var(--border) 25%);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.field input::placeholder {
+  color: var(--muted);
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 22%, transparent 78%);
+  background-color: var(--card);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.postjob-alert {
+  border-radius: 12px;
+  padding: 12px 12px;
+  font-weight: 800;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 70%, var(--border) 30%);
+  color: var(--text);
+}
+
+.postjob-alert.is-success {
+  border-color: rgba(4, 120, 87, 0.25);
+  background: color-mix(in srgb, #10b981 14%, var(--card) 86%);
+  color: color-mix(in srgb, var(--text) 85%, #047857 15%);
+}
+
+.postjob-alert.is-error {
+  border-color: rgba(185, 28, 28, 0.25);
+  background: color-mix(in srgb, #ef4444 12%, var(--card) 88%);
+  color: color-mix(in srgb, var(--text) 85%, #b91c1c 15%);
+}
+
+.postjob-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.postjob-btn {
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 900;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  background: var(--card);
+  color: var(--text);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.postjob-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.postjob-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.postjob-btn--primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+  flex: 1 1 auto;
+}
+
+.postjob-footnote {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .postjob-grid {
+    grid-template-columns: 1fr;
+  }
+}
