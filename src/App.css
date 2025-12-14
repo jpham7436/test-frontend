@@ -52,6 +52,42 @@ body {
   margin: 0 auto 20px;
   color: var(--muted);
 }
+.hero-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Base button */
+.btn {
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* Primary (gradient) */
+.btn.primary {
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  color: white;
+}
+
+/* Secondary (outline) */
+.btn.secondary {
+  background: white;
+  color: var(--brand);
+  border: 1px solid var(--brand);
+}
+
+.btn:hover {
+  text-decoration: underline;
+  transform: translateY(-1px);
+}
+
 .search {
   display: flex;
   justify-content: center;
@@ -71,6 +107,10 @@ body {
   color: white;
   font-weight: bold;
   cursor: pointer;
+  text-decoration: none;
+}
+.search button:hover {
+  text-decoration: underline;
 }
 
 /* Jobs */
@@ -82,10 +122,13 @@ body {
 .jobs h2 {
   margin-bottom: 16px;
 }
+
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 .card {
   background: var(--card);
@@ -94,12 +137,26 @@ body {
   padding: 16px;
   box-shadow: 0 4px 10px rgba(255, 92, 168, 0.2);
 }
+
 .card h3 {
-  margin: 0 0 8px;
+  margin: 0;
+  line-height: 1.2;
+}
+.card p {
+  margin: 2px 0 0;
+  line-height: 2;
 }
 .card .muted {
   color: var(--muted);
+  font-size: 0.85rem;
 }
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .badge {
   display: inline-block;
   margin-top: 8px;
@@ -109,6 +166,10 @@ body {
   color: white;
   font-size: 0.8rem;
   font-weight: bold;
+  margin-left: 12px;
+}
+.badge-wrap {
+  margin-left: auto;
 }
 
 /* Content */
@@ -142,44 +203,47 @@ body {
   flex-direction: column;
   gap: 10px;
 }
-
 .add-job-form label {
   display: flex;
   flex-direction: column;
   font-size: 0.9rem;
   gap: 4px;
 }
-
 .add-job-form input,
 .add-job-form select {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid var(--line);
 }
-
 .add-job-actions {
   display: flex;
   gap: 8px;
   margin-top: 12px;
 }
-
 .add-job-actions button {
   padding: 10px 16px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   font-weight: bold;
+  text-decoration: none;
 }
-
+.add-job-actions button:hover {
+  text-decoration: underline;
+}
 .add-job-actions button[type="submit"] {
   background: linear-gradient(135deg, var(--brand), var(--brand2));
   color: white;
 }
-
 .add-job-actions .secondary {
   background: white;
   color: var(--brand);
   border: 1px solid var(--brand);
+}
+
+.form-success {
+  color: #0a7a3d;
+  font-size: 0.85rem;
 }
 
 .form-error {
@@ -188,16 +252,22 @@ body {
 }
 
 .tag {
-  margin-right: 8px;   /* adds spacing */
   padding: 4px 8px;
   background: var(--line);
   border-radius: 6px;
   display: inline-block;
 }
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
 
 .logo {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: var(--brand);
   color: white;
   border-radius: 50%;
@@ -206,4 +276,119 @@ body {
   justify-content: center;
   font-weight: bold;
   margin-right: 12px; /* spacing from title */
+  flex-shrink: 0;
+  font-size: 1.1rem;
+}
+
+.sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.source-btn {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: white;
+  color: var(--brand);
+  border: 1px solid var(--brand);
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.source-btn:hover {
+  background: var(--brand);
+  color: white;
+  text-decoration: underline;
+  transform: translateY(-1px);
+}
+.sources a {
+  margin: 0 4px;
+}
+
+.stats label select {
+  margin-left: 4px;
+}
+
+li.desc {
+  list-style: none;
+  padding-left: 1.2em;
+  margin-left: 0;
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  line-height: 1.5;
+}
+
+@keyframes cardFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.home-hero h1,
+.home-hero h2 {
+  animation: heroFadeUp 0.45s ease-out both;
+}
+
+.hero h2 {
+  animation-delay: 0.08s;
+}
+.home-hero .hero-actions .btn {
+  animation: heroFadeUp 0.45s ease-out both;
+}
+
+.hero-actions .btn:nth-child(1) {
+  animation-delay: 0.16s;
+}
+
+.hero-actions .btn:nth-child(2) {
+  animation-delay: 0.22s;
+}
+.content img {
+  animation: heroFadeUp 0.5s ease-out both;
+  animation-delay: 0.25s;
+}
+.content h2,
+.content p,
+.content ul {
+  animation: heroFadeUp 0.45s ease-out both;
+  animation-delay: 0.3s;
+}
+
+
+.card {
+  animation: cardFadeUp 0.35s ease-out both;
+}
+.cards .card:nth-child(1) { animation-delay: 0.03s; }
+.cards .card:nth-child(2) { animation-delay: 0.06s; }
+.cards .card:nth-child(3) { animation-delay: 0.09s; }
+.cards .card:nth-child(4) { animation-delay: 0.12s; }
+.cards .card:nth-child(5) { animation-delay: 0.15s; }
+.cards .card:nth-child(6) { animation-delay: 0.18s; }
+.card {
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(255, 92, 168, 0.25);
 }

@@ -68,20 +68,25 @@ function JobCard({ job }) {
       </div>
 
       {Array.isArray(job.source_urls) && job.source_urls.length > 0 && (
-        <div className="sources muted">
-          Sources:{" "}
-          {job.source_urls
-            .map((u, i) => {
-              const name =
-                (job.source_names && job.source_names[i]) || "source";
-              return (
-                <a key={u + i} href={u} target="_blank" rel="noreferrer">
-                  {name}
-                </a>
-              );
-            })
-            .reduce((prev, curr) => (prev === null ? [curr] : [...prev, " • ", curr]), null)}
-        </div>
+        <div className="sources">
+     {job.source_urls.map((u, i) => {
+    const name =
+      (job.source_names && job.source_names[i]) || "Source";
+
+    return (
+      <a
+        key={u + i}
+        href={u}
+        target="_blank"
+        rel="noreferrer"
+        className="source-btn"
+      >
+        {name}
+      </a>
+    );
+  })}
+</div>
+
       )}
     </article>
   );
@@ -94,6 +99,7 @@ function AddJobPage({
   formState,
   handlers,
   submitting,
+  successMessage,
   errorMessage,
   onSubmit,
 }) {
@@ -206,6 +212,8 @@ function AddJobPage({
         </label>
 
         {errorMessage && <div className="form-error">{errorMessage}</div>}
+        {successMessage && ( <div className="form-success">Job posted successfully!</div> )}
+
 
         <div className="add-job-actions">
           <button type="submit" disabled={submitting}>
@@ -250,19 +258,19 @@ function JobsPage({ visible, q, setQ, location, setLocation, certifiedOnly, setC
                 checked={certifiedOnly}
                 onChange={(e) => setCertifiedOnly(e.target.checked)}
               />
-              certified only
+              Certified only
             </label>
           </div>
 
           <div>
             <label>
-              sort:
+              Sort by:
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
               >
-                <option value="recent">recent</option>
-                <option value="score">score</option>
+                <option value="recent">Recent</option>
+                <option value="score">Score</option>
               </select>
             </label>
           </div>
@@ -273,13 +281,16 @@ function JobsPage({ visible, q, setQ, location, setLocation, certifiedOnly, setC
       </section>
 
       <section className="featured">
-        <h2>Job listings</h2>
-        <div className="cards">
+        <div
+          className="cards"
+          key={`${certifiedOnly}-${sort}`}
+        >
           {visible.map((job) => (
             <JobCard key={job.id} job={job} />
           ))}
         </div>
       </section>
+
     </>
   );
 }
@@ -290,11 +301,18 @@ function JobsPage({ visible, q, setQ, location, setLocation, certifiedOnly, setC
 function HomePage() {
   return (
     <>
-      <section className="hero">
+      <section className="hero home-hero">
         <h1>Find real jobs, fast.</h1>
-        <p className="sub">
-          Certified Jobs helps employers and employees alike.
-        </p>
+        <h2>Certified Jobs helps employers and employees alike.</h2>
+
+        <div className="hero-actions">
+          <Link to="/jobs" className="btn primary">
+            Find Jobs
+          </Link>
+          <Link to="/post" className="btn secondary">
+            Post a Job
+          </Link>
+        </div>
       </section>
       
       <section className="content">
@@ -310,9 +328,18 @@ function HomePage() {
         </p>
         <h2>How it works</h2>
         <ul className="steps">
-          <li><b>ingest</b> jobs</li>
-          <li><b>verify</b> with backend scoring</li>
-          <li><b>publish</b> certified results</li>
+          <li><b>ingest</b> jobs from employers or feeds</li>
+            <li class="desc">
+              This is explanatory text
+            </li>
+          <li><b>verify</b> with backend rules and scoring</li>
+            <li class="desc">
+              This is explanatory text
+            </li>
+          <li><b>publish</b> only certified results</li>
+            <li class="desc">
+              This is explanatory text
+            </li>
         </ul>
       </section>
     </>
@@ -339,6 +366,7 @@ export default function App() {
   const [formAvailability, setFormAvailability] = useState("");
   const [formSources, setFormSources] = useState("");      // comma-separated URLs
   const [formSourceNames, setFormSourceNames] = useState(""); // comma-separated names
+  const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
   const [formSubmitting, setFormSubmitting] = useState(false);
 
@@ -413,8 +441,17 @@ export default function App() {
   async function handleAddJobSubmit(e) {
     e.preventDefault();
     setFormError("");
+    setFormSuccess(false);
 
-    if (!formTitle.trim() || !formCompany.trim() || !formLocation.trim() || !formType.trim() || !formSalary.trim() || !formAvailability.trim() || !formSources.trim()) {
+    if (
+      !formTitle.trim() ||
+      !formCompany.trim() ||
+      !formLocation.trim() ||
+      !formType.trim() ||
+      !formSalary.trim() ||
+      !formAvailability.trim() ||
+      !formSources.trim()
+    ) {
       setFormError("One or more fields are missing.");
       return;
     }
@@ -462,8 +499,10 @@ export default function App() {
       if (!res.ok) throw new Error();
       const created = await res.json();
 
-      // Optimistically add to local list so it appears immediately
       setJobs((prev) => [...prev, created]);
+
+      // ✅ success
+      setFormSuccess(true);
 
       // Reset form
       setFormTitle("");
@@ -539,6 +578,7 @@ export default function App() {
                 setFormSources,
                 setFormSourceNames,
               }}
+              successMessage={formSuccess}
               errorMessage={formError}
               submitting={formSubmitting}
               onSubmit={handleAddJobSubmit}
