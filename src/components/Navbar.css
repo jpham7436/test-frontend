@@ -1,150 +1,160 @@
-.navbar {
-  background-color: var(--card);
-  border-bottom: 1px solid var(--border);
+/* src/components/Navbar.css */
+.navWrap{
   position: sticky;
   top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+  z-index: 50;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.navInner{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.brand{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  padding: 6px 8px;
+  border-radius: 12px;
+  transition: transform .12s ease, background .12s ease;
+}
+.brand:hover{
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+.dot{
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent);
+}
+.brandText{
+  font-weight: 900;
+  letter-spacing: .2px;
   color: var(--text);
 }
 
-.navbar-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 64px;
+.navSearch{
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 10px;
+}
+.searchIcon{
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-weight: 900;
+  opacity: .9;
+  pointer-events: none;
+}
+.navSearch input{
+  width: 100%;
+  padding: 11px 12px 11px 38px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text);
+  outline: none;
+  transition: box-shadow .12s ease, border-color .12s ease, transform .12s ease;
+}
+.navSearch input:focus{
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--border));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 16%, transparent);
+  transform: translateY(-1px);
+}
+.navSearch input::placeholder{ color: var(--muted); }
+
+.searchBtn{
+  border: 1px solid var(--border);
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  color: #052e2b;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 950;
+  cursor: pointer;
+  transition: transform .12s ease, filter .12s ease;
+  white-space: nowrap;
+}
+.searchBtn:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+.searchBtn:active{ transform: translateY(0px); }
+
+.navLinks{
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-.navbar-logo {
-  font-size: 22px;
+.pill{
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.pill:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--brand) 30%, var(--border));
+}
+.pill.active{
+  border-color: color-mix(in srgb, var(--brand) 60%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent);
+}
+.pill.soft{
+  background: transparent;
+}
+
+.pill.danger{
+  border-color: color-mix(in srgb, var(--danger) 55%, var(--border));
+  background: color-mix(in srgb, var(--danger) 10%, var(--bg2));
+}
+
+.userChip{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-left: 6px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+
+.avatar{
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand) 16%, var(--bg2));
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-weight: 950;
+  color: var(--text);
+}
+
+.userMeta{ line-height: 1.05; }
+.userName{
   font-weight: 900;
   color: var(--text);
-  text-decoration: none;
-  white-space: nowrap;
-  letter-spacing: -0.02em;
+  font-size: 13px;
 }
-
-.navbar-logo:hover {
-  color: var(--primary);
-}
-
-.navbar-search {
-  flex: 1;
-  max-width: 420px;
-}
-
-.navbar-search input {
-  width: 100%;
-  padding: 10px 16px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-  background-color: color-mix(in srgb, var(--card) 75%, var(--border) 25%);
-  color: var(--text);
-}
-
-.navbar-search input::placeholder {
+.userRole{
+  font-size: 12px;
   color: var(--muted);
-}
-
-.navbar-search input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 22%, transparent 78%);
-  background-color: var(--card);
-}
-
-.navbar-links {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
-}
-
-.navbar-link {
-  color: color-mix(in srgb, var(--text) 80%, var(--muted) 20%);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 10px 14px;
-  border-radius: 999px;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-  border: 1px solid transparent;
-}
-
-.navbar-link:hover {
-  color: var(--text);
-  background-color: color-mix(in srgb, var(--card) 70%, var(--border) 30%);
-  border-color: var(--border);
-}
-
-/* Optional: if your Navbar uses NavLink and sets an "active" class */
-.navbar-link.active {
-  color: #ffffff;
-  background-color: var(--primary);
-  border-color: var(--primary);
-}
-
-/* Theme toggle button */
-.theme-toggle {
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-  white-space: nowrap;
-}
-
-.theme-toggle:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow);
-}
-
-[data-theme="dark"] .theme-toggle {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-@media (max-width: 768px) {
-  .navbar-container {
-    gap: 12px;
-    height: 56px;
-  }
-
-  .navbar-logo {
-    font-size: 18px;
-  }
-
-  .navbar-search {
-    max-width: 180px;
-  }
-
-  .navbar-search input {
-    padding: 8px 12px;
-    font-size: 13px;
-  }
-
-  .navbar-links {
-    gap: 4px;
-  }
-
-  .navbar-link {
-    padding: 8px 10px;
-    font-size: 13px;
-  }
-}
-.navbar-link--post {
-  background: var(--primary);
-  color: #fff !important;
-  border-color: var(--primary) !important;
-}
-
-.navbar-link--post:hover {
-  background: color-mix(in srgb, var(--primary) 88%, #000 12%);
+  text-transform: capitalize;
 }

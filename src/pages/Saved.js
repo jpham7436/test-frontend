@@ -1,76 +1,80 @@
+// src/pages/Saved.js
 import React, { useEffect, useState } from "react";
-import { fetchSavedJobs, unsaveJob } from "../api/jobs";
-import JobCard from "../components/JobCard";
-import LoadingSkeleton from "../components/LoadingSkeleton";
+import { fetchSavedJobs, fetchSavedJobIds, unsaveJob } from "../api/jobs";
 import "./Saved.css";
 
-function Saved() {
-  const [savedJobs, setSavedJobs] = useState([]);
+export default function Saved() {
+  const [jobs, setJobs] = useState([]);
+  const [savedIds, setSavedIds] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const load = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await fetchSavedJobs();
-      setSavedJobs(Array.isArray(data) ? data : []);
-    } catch {
-      setError("Failed to load saved jobs");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [err, setErr] = useState("");
 
   useEffect(() => {
-    load();
+    let mounted = true;
+
+    (async () => {
+      try {
+        setLoading(true);
+        setErr("");
+        const [list, ids] = await Promise.all([fetchSavedJobs(), fetchSavedJobIds()]);
+        if (!mounted) return;
+        setJobs(Array.isArray(list) ? list : []);
+        setSavedIds(ids || []);
+      } catch (e) {
+        if (!mounted) return;
+        setErr(e.message || "Failed to load saved jobs");
+      } finally {
+        if (!mounted) return;
+        setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const remove = async (id) => {
+  const remove = async (jobId) => {
     try {
-      await unsaveJob(id);
-      setSavedJobs((prev) => prev.filter((j) => String(j.id) !== String(id)));
-    } catch {
-      setError("Failed to remove saved job");
+      const res = await unsaveJob(jobId);
+      const nextIds = res.savedIds || [];
+      setSavedIds(nextIds);
+      setJobs((prev) => prev.filter((j) => j.id !== jobId));
+    } catch (e) {
+      alert(e.message);
     }
   };
 
   return (
-    <div className="saved-container">
-      <div className="saved-header">
-        <h1>Saved Jobs</h1>
-        <p className="saved-subtitle">
-          {savedJobs.length} {savedJobs.length === 1 ? "job" : "jobs"} saved
-        </p>
+    <div className="page">
+      <div className="pageHeader">
+        <div>
+          <h2>Saved Jobs</h2>
+          <p className="muted">Your bookmarked listings.</p>
+        </div>
       </div>
 
-      {loading && (
-        <div className="saved-jobs">
-          <LoadingSkeleton count={3} />
-        </div>
-      )}
+      {err && <div className="alert">{err}</div>}
 
-      {error && (
-        <div className="error-message">
-          <p>{error}</p>
-        </div>
-      )}
+      {loading ? (
+        <div className="muted">Loading...</div>
+      ) : jobs.length === 0 ? (
+        <div className="emptyBox">No saved jobs yet.</div>
+      ) : (
+        <div className="savedGrid">
+          {jobs.map((job) => (
+            <div key={job.id} className="savedCard">
+              <div className="savedTop">
+                <div className="savedTitle">{job.title}</div>
+                <div className="badge verified">{job.verdict === "certified" ? "Verified" : "Standard"}</div>
+              </div>
+              <div className="muted">{job.company} • {job.location}</div>
+              <div className="muted">{job.type} • {job.salary}</div>
 
-      {!loading && savedJobs.length === 0 && (
-        <div className="empty-message">
-          <h3>No saved jobs yet</h3>
-          <p>Browse jobs and click ☆ / Save to bookmark positions.</p>
-        </div>
-      )}
-
-      {!loading && savedJobs.length > 0 && (
-        <div className="saved-jobs">
-          {savedJobs.map((job) => (
-            <div key={job.id} className="saved-job-wrapper">
-              <JobCard job={job} />
-              <button className="unsave-btn" onClick={() => remove(job.id)}>
-                Remove
-              </button>
+              <div className="savedActions">
+                <button className="btn ghost" onClick={() => remove(job.id)}>Remove</button>
+                <a className="btn" href={job.apply_url} target="_blank" rel="noreferrer">Apply</a>
+              </div>
             </div>
           ))}
         </div>
@@ -78,5 +82,3 @@ function Saved() {
     </div>
   );
 }
-
-export default Saved;

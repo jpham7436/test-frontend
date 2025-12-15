@@ -1,103 +1,51 @@
-.saved-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 24px;
+/* src/pages/Saved.css */
+.savedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
 }
 
-.saved-header {
-  margin-bottom: 32px;
-  text-align: center;
-}
-
-.saved-header h1 {
-  font-size: 32px;
-  font-weight: 900;
-  margin: 0 0 8px 0;
-  color: var(--text);
-  letter-spacing: -0.02em;
-}
-
-.saved-subtitle {
-  font-size: 16px;
-  color: var(--muted);
-  margin: 0;
-}
-
-.saved-jobs {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.saved-job-wrapper {
-  position: relative;
-}
-
-/* UNSAVE BUTTON */
-.unsave-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  padding: 8px 16px;
-  background-color: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-  z-index: 10;
-}
-
-.unsave-btn:hover {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow);
-}
-
-/* EMPTY STATE */
-.empty-message {
-  background-color: var(--card);
+.savedCard {
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 56px 40px;
-  text-align: center;
+  padding: 14px;
   box-shadow: var(--shadow);
 }
 
-.empty-message h3 {
-  font-size: 24px;
-  color: var(--text);
-  margin: 0 0 12px 0;
+.savedTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.savedTitle {
   font-weight: 900;
+  color: var(--text);
 }
 
-.empty-message p {
-  color: var(--muted);
-  margin: 0;
-  line-height: 1.6;
-  font-size: 16px;
+.savedActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
 }
 
-@media (max-width: 768px) {
-  .saved-container {
-    padding: 16px;
-  }
+.badge {
+  font-size: 12px;
+  font-weight: 900;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text);
+}
 
-  .saved-header h1 {
-    font-size: 28px;
-  }
+.badge.verified {
+  background: color-mix(in srgb, var(--brand) 12%, var(--bg2));
+}
 
-  .unsave-btn {
-    position: static;
-    width: 100%;
-    margin-top: 12px;
-  }
-
-  .saved-job-wrapper .job-card {
-    padding-bottom: 12px;
-  }
+@media (max-width: 900px) {
+  .savedGrid { grid-template-columns: 1fr; }
 }

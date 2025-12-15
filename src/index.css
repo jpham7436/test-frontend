@@ -1,92 +1,41 @@
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* =========================
-   THEME VARIABLES
-   ========================= */
-
-/* Light mode (default) */
 :root {
-  --bg: #f8fafc;
-  --card: #ffffff;
-  --border: #e5e7eb;
+  --bg: #f6f8fb;
+  --panel: #ffffff;
   --text: #0f172a;
-  --muted: #64748b;
+  --muted: #475569;
+  --border: rgba(15, 23, 42, 0.10);
+  --shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
 
-  --primary: #059669;
-  --primary-2: #047857;
+  --brand: #10b981; /* professional green */
+  --brand-2: #22c55e;
 
-  --shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+  --chip: rgba(16, 185, 129, 0.10);
+  --chip-text: #065f46;
+
+  --danger: #ef4444;
 }
 
-/* Dark mode */
 [data-theme="dark"] {
-  --bg: #0b1220;
-  --card: #0f172a;
-  --border: #1f2937;
+  --bg: #070b14;
+  --panel: rgba(255, 255, 255, 0.06);
   --text: #e5e7eb;
-  --muted: #94a3b8;
+  --muted: rgba(229, 231, 235, 0.75);
+  --border: rgba(255, 255, 255, 0.10);
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 
-  --primary: #34d399;
-  --primary-2: #10b981;
-
-  --shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  --chip: rgba(16, 185, 129, 0.16);
+  --chip-text: #a7f3d0;
 }
 
-/* =========================
-   GLOBAL STYLES
-   ========================= */
+html, body {
+  height: 100%;
+}
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  background: var(--bg);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: radial-gradient(1200px 700px at 30% -10%, rgba(16,185,129,0.25), transparent 55%),
+              radial-gradient(900px 600px at 90% 10%, rgba(34,197,94,0.18), transparent 55%),
+              var(--bg);
   color: var(--text);
-}
-
-/* Code blocks */
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-/* --- Safe defaults so text never becomes white-on-white --- */
-a { color: inherit; }
-
-.navbar, .sidebar-card, .jobs-filters, .job-card, .empty-message, .error-message {
-  background: var(--card);
-  color: var(--text);
-  border-color: var(--border);
-}
-
-/* Any headings inside cards */
-.sidebar-card h1,
-.sidebar-card h2,
-.sidebar-card h3,
-.sidebar-card h4,
-.sidebar-title,
-.filters-title,
-.jobs-header h2,
-.saved-header h1 {
-  color: var(--text);
-}
-
-/* Secondary text inside cards */
-.sidebar-text,
-.sidebar-list li,
-.jobs-subtitle,
-.saved-subtitle,
-.job-card-company,
-.job-card-meta,
-.job-card-date,
-.verification-score {
-  color: var(--muted);
 }

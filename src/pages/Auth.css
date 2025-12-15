@@ -1,0 +1,100 @@
+/* src/pages/Auth.css */
+.authShell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(1200px 500px at 50% 0%, color-mix(in srgb, var(--brand) 18%, transparent), transparent),
+    var(--bg);
+  padding: 24px;
+}
+
+.authCard {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.authBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+.authTitle {
+  margin: 0;
+  font-size: 26px;
+  color: var(--text);
+}
+
+.authSub {
+  margin: 8px 0 14px;
+  color: var(--muted);
+}
+
+.authAlert {
+  background: color-mix(in srgb, var(--danger) 12%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--border));
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+
+.authForm {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.authForm label {
+  display: grid;
+  gap: 6px;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.authForm input,
+.authForm select {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text);
+  outline: none;
+}
+
+.authBtn {
+  margin-top: 8px;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--brand);
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.authBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.authFoot {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.authFoot a {
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: none;
+}

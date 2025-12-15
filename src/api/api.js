@@ -1,32 +1,36 @@
-const BASE = "/api";
+// src/api/api.js
+export const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
-export async function fetchJobs(params = {}) {
-  const qs = new URLSearchParams(params).toString();
-  const res = await fetch(`${BASE}/jobs?${qs}`);
-  if (!res.ok) throw new Error("Failed to load jobs");
-  return res.json();
-}
+// default export MUST be a function
+export default async function apiFetch(path, options = {}) {
+  const token = localStorage.getItem("token");
 
-export async function fetchJobById(id) {
-  const res = await fetch(`${BASE}/jobs/${id}`);
-  if (!res.ok) throw new Error("Failed to load job");
-  return res.json();
-}
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
 
-export async function fetchSaved() {
-  const res = await fetch(`${BASE}/saved`);
-  if (!res.ok) throw new Error("Failed to load saved jobs");
-  return res.json();
-}
+  const text = await res.text();
+  let data = null;
 
-export async function saveJob(jobId) {
-  const res = await fetch(`${BASE}/saved/${jobId}`, { method: "POST" });
-  if (!res.ok) throw new Error("Failed to save job");
-  return res.json();
-}
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = text || null;
+  }
 
-export async function unsaveJob(jobId) {
-  const res = await fetch(`${BASE}/saved/${jobId}`, { method: "DELETE" });
-  if (!res.ok) throw new Error("Failed to unsave job");
-  return res.json();
+  if (!res.ok) {
+    const msg =
+      (data && data.error) ||
+      (data && data.message) ||
+      (typeof data === "string" ? data : null) ||
+      "Request failed";
+    throw new Error(msg);
+  }
+
+  return data;
 }

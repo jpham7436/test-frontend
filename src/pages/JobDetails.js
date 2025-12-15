@@ -1,129 +1,100 @@
-import React, { useEffect, useMemo, useState } from "react";
+// src/pages/JobDetails.js
+import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { fetchJobById, fetchSavedJobIds, saveJob, unsaveJob } from "../api/jobs";
-import LoadingSkeleton from "../components/LoadingSkeleton";
+import { fetchJobById, saveJob, unsaveJob, fetchSavedJobIds } from "../api/jobs";
+import "./JobDetails.css";
 
-function buildFallbackApply(company) {
-  const q = encodeURIComponent(`${company || "company"} careers`);
-  return `https://www.google.com/search?q=${q}`;
-}
-
-function JobDetails() {
+export default function JobDetails() {
   const { id } = useParams();
-
   const [job, setJob] = useState(null);
-  const [savedIds, setSavedIds] = useState(new Set());
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const load = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const [j, saved] = await Promise.all([
-        fetchJobById(id),
-        fetchSavedJobIds(),
-      ]);
-
-      setJob(j);
-      setSavedIds(new Set((saved || []).map(String)));
-    } catch (err) {
-      // show better message
-      setError("Failed to load job. (Job may not exist or backend isn't running)");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [savedIds, setSavedIds] = useState([]);
+  const [err, setErr] = useState("");
 
   useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let mounted = true;
+
+    (async () => {
+      try {
+        setErr("");
+        const [j, ids] = await Promise.all([fetchJobById(id), fetchSavedJobIds()]);
+        if (!mounted) return;
+        setJob(j);
+        setSavedIds(ids || []);
+      } catch (e) {
+        if (!mounted) return;
+        setErr(e.message || "Failed to load job");
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
   }, [id]);
 
-  const isSaved = job ? savedIds.has(String(job.id)) : false;
-
-  const applyHref = useMemo(() => {
-    if (!job) return "";
-    const raw = job.apply_url || job.applyUrl || job.url || "";
-    return raw ? raw : buildFallbackApply(job.company);
-  }, [job]);
+  const isSaved = job ? savedIds.includes(job.id) : false;
 
   const toggleSave = async () => {
-    if (!job?.id) return;
-    const jobId = String(job.id);
-    const currentlySaved = savedIds.has(jobId);
-
-    // optimistic UI
-    setSavedIds((prev) => {
-      const next = new Set(prev);
-      if (currentlySaved) next.delete(jobId);
-      else next.add(jobId);
-      return next;
-    });
-
     try {
-      if (currentlySaved) await unsaveJob(jobId);
-      else await saveJob(jobId);
-    } catch {
-      // revert
-      setSavedIds((prev) => {
-        const next = new Set(prev);
-        if (currentlySaved) next.add(jobId);
-        else next.delete(jobId);
-        return next;
-      });
+      const res = isSaved ? await unsaveJob(job.id) : await saveJob(job.id);
+      setSavedIds(res.savedIds || []);
+    } catch (e) {
+      alert(e.message);
     }
   };
 
-  if (loading) return <LoadingSkeleton count={1} />;
-  if (error) return <p style={{ padding: 24 }}>{error}</p>;
-  if (!job) return <p style={{ padding: 24 }}>Job not found</p>;
+  const apply = () => {
+    const url = job?.apply_url;
+    if (!url) return alert("No apply link for this job.");
+    window.open(url, "_blank");
+  };
+
+  if (err) {
+    return (
+      <div className="page">
+        <div className="alert">{err}</div>
+        <Link className="btn" to="/jobs">Back to jobs</Link>
+      </div>
+    );
+  }
+
+  if (!job) return <div className="page muted">Loading job...</div>;
 
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: 24 }}>
-      <Link to="/jobs" style={{ textDecoration: "none" }}>
-        ← Back to Search
-      </Link>
-
-      <div className="job-detail__card" style={{ marginTop: 16 }}>
-        <div className="job-detail__head">
-          <div className="job-detail__logo" aria-hidden="true">
-            {(job.company || "J")[0]?.toUpperCase()}
-          </div>
-          <div className="job-detail__headText">
-            <div className="job-detail__title">{job.title || "Untitled Role"}</div>
-            <div className="job-detail__meta">
-              <span className="job-detail__company">{job.company || "Unknown Company"}</span>
-              <span className="job-detail__dot">•</span>
-              <span>{job.location || "Location not listed"}</span>
+    <div className="jobDetailsPage">
+      <div className="jobDetailsCard">
+        <div className="jdTop">
+          <div>
+            <h1 className="jdTitle">{job.title}</h1>
+            <div className="jdMeta">
+              <span className="jdCompany">{job.company}</span>
+              <span className="dotSep">•</span>
+              <span className="jdLoc">{job.location}</span>
             </div>
           </div>
+
+          <div className="jdActions">
+            <button className={isSaved ? "btn ghost saved" : "btn ghost"} onClick={toggleSave}>
+              {isSaved ? "Saved" : "Save"}
+            </button>
+            <button className="btn" onClick={apply}>Apply</button>
+          </div>
         </div>
 
-        <div className="job-detail__ctaRow">
-          {/* ✅ REAL APPLY LINK */}
-          <a
-            className="btn btn--primary"
-            href={applyHref}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Apply Now
-          </a>
-
-          <button className="btn btn--ghost" type="button" onClick={toggleSave}>
-            {isSaved ? "Saved ★" : "Save Job"}
-          </button>
+        <div className="jdChips">
+          <span className="chip">{job.type}</span>
+          <span className="chip">{job.salary}</span>
+          <span className="chip">{job.verification_score}% verified</span>
         </div>
 
-        <div className="job-detail__section">
-          <div className="job-detail__sectionTitle">About the role</div>
-          <div className="job-detail__desc">{job.description || "No description provided."}</div>
+        <div className="jdBody">
+          <h3>About the role</h3>
+          <pre className="jdDesc">{job.description}</pre>
+        </div>
+
+        <div className="jdFoot">
+          <Link className="btn ghost" to="/jobs">← Back to jobs</Link>
         </div>
       </div>
     </div>
   );
 }
-
-export default JobDetails;

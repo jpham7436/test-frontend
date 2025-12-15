@@ -1,244 +1,186 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { postJob } from "../api/jobs";
+import { getUser } from "../utils/authStore";
 import "./PostJob.css";
 
-function PostJob() {
-  const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
+export default function PostJob() {
+  const nav = useNavigate();
+  const user = getUser();
+
+  const isCompany = useMemo(() => String(user?.role || "").toLowerCase() === "company", [user]);
 
   const [form, setForm] = useState({
     title: "",
-    company: "",
+    company: user?.name || "",
     location: "",
     type: "Full-time",
     salary: "",
     availability: "",
-    sources: "",
-    sourceNames: "",
+    source_urls: "",
+    source_names: "",
   });
 
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
+  const [ok, setOk] = useState("");
 
-  const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const set = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
 
-  const submit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess(false);
+    setErr("");
+    setOk("");
 
-    if (!form.title || !form.company || !form.location || !form.salary) {
-      setError("Please fill all required fields.");
+    if (!isCompany) {
+      setErr("Only company accounts can post jobs.");
       return;
     }
 
-    setSubmitting(true);
+    if (!form.title || !form.company || !form.location || !form.salary) {
+      setErr("Please fill: Job title, Company, Location, Salary.");
+      return;
+    }
+
+    const source_urls = form.source_urls
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const source_names = form.source_names
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
 
     try {
-      const source_urls = form.sources
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
-        .map((u) => (u.startsWith("http") ? u : "https://" + u));
-
-      const source_names = form.sourceNames
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
-
-      const res = await fetch(`${API}/api/jobs`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: form.title,
-          company: form.company,
-          location: form.location,
-          type: form.type,
-          salary: form.salary,
-          availability: form.availability,
-          source_urls,
-          source_names,
-        }),
+      setSaving(true);
+      await postJob({
+        title: form.title,
+        company: form.company,
+        location: form.location,
+        type: form.type,
+        salary: form.salary,
+        availability: form.availability,
+        source_urls,
+        source_names,
       });
 
-      if (!res.ok) throw new Error();
-
-      setSuccess(true);
-      setForm({
-        title: "",
-        company: "",
-        location: "",
-        type: "Full-time",
-        salary: "",
-        availability: "",
-        sources: "",
-        sourceNames: "",
-      });
-    } catch {
-      setError("Failed to post job.");
+      setOk("Job posted! It should appear in the feed.");
+      setTimeout(() => nav("/company"), 650);
+    } catch (e2) {
+      setErr(e2.message || "Failed to post job");
     } finally {
-      setSubmitting(false);
+      setSaving(false);
     }
   };
 
   return (
-    <div className="postjob-page">
-      <div className="postjob-shell">
-        <header className="postjob-header">
-          <div>
-            <h1 className="postjob-title">Post a job</h1>
-            <p className="postjob-subtitle">
-              Create a new listing that appears immediately in the Jobs feed.
-            </p>
+    <div className="pjWrap">
+      <div className="pjHeader">
+        <div>
+          <div className="pjKicker">COMPANY</div>
+          <h1 className="pjTitle">Post a job</h1>
+          <p className="pjSub">Create a listing that shows up in the Jobs feed.</p>
+        </div>
+
+        <div className="pjActions">
+          <button className="btnGhost" onClick={() => nav("/company")} type="button">
+            Back to dashboard
+          </button>
+          <button className="btnPrimary" onClick={() => nav("/jobs")} type="button">
+            View feed
+          </button>
+        </div>
+      </div>
+
+      {!isCompany && (
+        <div className="alert warn">
+          You’re logged in as a <b>{user?.role || "user"}</b>. Switch to a company account to post jobs.
+        </div>
+      )}
+
+      {err && <div className="alert error">{err}</div>}
+      {ok && <div className="alert ok">{ok}</div>}
+
+      <form className="pjCard" onSubmit={onSubmit}>
+        <div className="grid">
+          <div className="field">
+            <label>Job title *</label>
+            <input value={form.title} onChange={set("title")} placeholder="e.g., Junior Software Engineer" />
           </div>
 
-          <div className="postjob-badge" aria-hidden="true">
-            Employer
-          </div>
-        </header>
-
-        <form className="postjob-card" onSubmit={submit}>
-          {/* JOB INFO */}
-          <div className="postjob-section">
-            <div className="postjob-sectionTitle">Job information</div>
-
-            <div className="postjob-grid">
-              <div className="field">
-                <label>Job title <span className="req">*</span></label>
-                <input
-                  placeholder="e.g., Frontend Engineer"
-                  value={form.title}
-                  onChange={update("title")}
-                />
-              </div>
-
-              <div className="field">
-                <label>Company <span className="req">*</span></label>
-                <input
-                  placeholder="e.g., Stripe"
-                  value={form.company}
-                  onChange={update("company")}
-                />
-              </div>
-
-              <div className="field">
-                <label>Location <span className="req">*</span></label>
-                <input
-                  placeholder="e.g., San Diego, CA (Hybrid)"
-                  value={form.location}
-                  onChange={update("location")}
-                />
-              </div>
-
-              <div className="field">
-                <label>Job type</label>
-                <select value={form.type} onChange={update("type")}>
-                  <option>Full-time</option>
-                  <option>Part-time</option>
-                  <option>Contract</option>
-                  <option>Internship</option>
-                </select>
-              </div>
-            </div>
+          <div className="field">
+            <label>Company *</label>
+            <input value={form.company} onChange={set("company")} placeholder="e.g., SDSU" />
           </div>
 
-          {/* COMP */}
-          <div className="postjob-section">
-            <div className="postjob-sectionTitle">Compensation</div>
-
-            <div className="postjob-grid">
-              <div className="field">
-                <label>Salary <span className="req">*</span></label>
-                <input
-                  placeholder="e.g., $115k–$165k or $25–$35/hr"
-                  value={form.salary}
-                  onChange={update("salary")}
-                />
-              </div>
-
-              <div className="field">
-                <label>Availability</label>
-                <input
-                  placeholder="e.g., Start ASAP / Spring 2026"
-                  value={form.availability}
-                  onChange={update("availability")}
-                />
-              </div>
-            </div>
+          <div className="field">
+            <label>Location *</label>
+            <input value={form.location} onChange={set("location")} placeholder="e.g., San Diego, CA (Hybrid)" />
           </div>
 
-          {/* SOURCES */}
-          <div className="postjob-section">
-            <div className="postjob-sectionTitle">Sources</div>
-
-            <div className="postjob-grid">
-              <div className="field field--full">
-                <label>Source URLs</label>
-                <input
-                  placeholder="Comma separated, e.g., company.com/careers, linkedin.com/jobs/..."
-                  value={form.sources}
-                  onChange={update("sources")}
-                />
-                <div className="hint">Optional — helps credibility.</div>
-              </div>
-
-              <div className="field field--full">
-                <label>Source names</label>
-                <input
-                  placeholder="Comma separated, e.g., Company Site, LinkedIn"
-                  value={form.sourceNames}
-                  onChange={update("sourceNames")}
-                />
-              </div>
-            </div>
+          <div className="field">
+            <label>Job type</label>
+            <select value={form.type} onChange={set("type")}>
+              <option>Full-time</option>
+              <option>Part-time</option>
+              <option>Contract</option>
+              <option>Internship</option>
+            </select>
           </div>
 
-          {/* STATUS */}
-          {(error || success) && (
-            <div className={`postjob-alert ${error ? "is-error" : "is-success"}`}>
-              {error ? error : "Job posted successfully. It’s now live in Jobs."}
-            </div>
-          )}
+          <div className="field">
+            <label>Salary *</label>
+            <input value={form.salary} onChange={set("salary")} placeholder="e.g., $80k–$115k or $25/hr" />
+          </div>
 
-          {/* ACTIONS */}
-          <div className="postjob-actions">
-            <button
-              className="postjob-btn postjob-btn--primary"
-              disabled={submitting}
-              type="submit"
-            >
-              {submitting ? "Posting..." : "Post job"}
+          <div className="field">
+            <label>Availability</label>
+            <input value={form.availability} onChange={set("availability")} placeholder="e.g., ASAP / Spring / Summer" />
+          </div>
+
+          <div className="field full">
+            <label>Source URLs</label>
+            <input
+              value={form.source_urls}
+              onChange={set("source_urls")}
+              placeholder="Comma separated, e.g., company.com/careers, linkedin.com/jobs/..."
+            />
+          </div>
+
+          <div className="field full">
+            <label>Source names</label>
+            <input value={form.source_names} onChange={set("source_names")} placeholder="Comma separated, e.g., Company Site, LinkedIn" />
+          </div>
+        </div>
+
+        <div className="pjFooter">
+          <div className="hint">Fields marked * are required.</div>
+          <div className="row">
+            <button className="btnPrimary" disabled={!isCompany || saving} type="submit">
+              {saving ? "Posting..." : "Post job"}
             </button>
-
             <button
-              className="postjob-btn"
+              className="btnGhost"
               type="button"
-              disabled={submitting}
-              onClick={() => {
-                setError("");
-                setSuccess(false);
+              onClick={() =>
                 setForm({
                   title: "",
-                  company: "",
+                  company: user?.name || "",
                   location: "",
                   type: "Full-time",
                   salary: "",
                   availability: "",
-                  sources: "",
-                  sourceNames: "",
-                });
-              }}
+                  source_urls: "",
+                  source_names: "",
+                })
+              }
             >
               Clear
             </button>
           </div>
-
-          <div className="postjob-footnote">
-            Fields marked <span className="req">*</span> are required.
-          </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 }
-
-export default PostJob;
